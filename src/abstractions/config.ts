@@ -42,12 +42,43 @@ export function initializeConfig(config?: Partial<AppConfig>): AppConfig {
     // Create a mock payment provider for development
     paymentProvider = {
       createCustomer: async () => 'mock_customer_id',
-      createSubscription: async () => ({ id: 'mock_sub_id', status: 'active' } as any),
-      cancelSubscription: async () => ({ id: 'mock_sub_id', status: 'canceled' } as any),
-      updateSubscription: async () => ({ id: 'mock_sub_id', status: 'active' } as any),
-      getSubscription: async () => ({ id: 'mock_sub_id', status: 'active' } as any),
-      handleWebhook: async () => {},
-    } as IPaymentProvider;
+      createSubscription: async () => ({
+        id: 'mock_sub_id',
+        customerId: 'mock_customer_id',
+        priceId: 'mock_price_id',
+        status: 'active',
+        currentPeriodEnd: new Date(),
+        cancelAtPeriodEnd: false,
+      }),
+      cancelSubscription: async () => ({
+        id: 'mock_sub_id',
+        customerId: 'mock_customer_id',
+        priceId: 'mock_price_id',
+        status: 'canceled',
+        currentPeriodEnd: new Date(),
+        cancelAtPeriodEnd: true,
+      }),
+      getSubscription: async () => ({
+        id: 'mock_sub_id',
+        customerId: 'mock_customer_id',
+        priceId: 'mock_price_id',
+        status: 'active',
+        currentPeriodEnd: new Date(),
+        cancelAtPeriodEnd: false,
+      }),
+      handleWebhook: async () => ({
+        id: 'mock_event_id',
+        type: 'mock.event',
+        data: {},
+      }),
+      createCheckoutSession: async () => ({
+        url: 'https://checkout.mock.com',
+        sessionId: 'mock_session_id',
+      }),
+      createPortalSession: async () => ({
+        url: 'https://portal.mock.com',
+      }),
+    };
   }
 
   appConfig = {
