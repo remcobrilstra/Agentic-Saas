@@ -9,6 +9,10 @@ import {
   AuthSession,
   SignUpParams,
   SignInParams,
+  OAuthProvider,
+  MFAEnrollParams,
+  MFAFactor,
+  MFAVerifyParams,
 } from './auth';
 
 export class SupabaseAuthProvider implements IAuthProvider {
@@ -23,7 +27,10 @@ export class SupabaseAuthProvider implements IAuthProvider {
       email: params.email,
       password: params.password,
       options: {
-        data: params.metadata,
+        data: {
+          ...params.metadata,
+          role: params.metadata?.role || 'user', // Set default role
+        },
       },
     });
 
@@ -38,7 +45,7 @@ export class SupabaseAuthProvider implements IAuthProvider {
     return {
       id: data.user.id,
       email: data.user.email!,
-      role: data.user.role,
+      role: data.user.user_metadata?.role || data.user.role || 'user',
       metadata: data.user.user_metadata,
     };
   }
@@ -172,5 +179,105 @@ export class SupabaseAuthProvider implements IAuthProvider {
       role: data.user.role,
       metadata: data.user.user_metadata,
     };
+  }
+
+  async signInWithOAuth(provider: OAuthProvider, redirectTo?: string): Promise<{ url: string }> {
+    const { data, error } = await this.client.auth.signInWithOAuth({
+      provider: provider as 'google' | 'azure' | 'apple',
+      options: {
+        redirectTo: redirectTo || `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      throw new Error(`OAuth sign in error: ${error.message}`);
+    }
+
+    if (!data.url) {
+      throw new Error('OAuth sign in failed: No URL returned');
+    }
+
+    return { url: data.url };
+  }
+
+  async enrollMFA(params: MFAEnrollParams): Promise<{ id: string; totp?: { qr_code: string; secret: string; uri: string } }> {
+    const { data, error } = await this.client.auth.mfa.enroll({
+      factorType: params.factorType,
+      friendlyName: params.friendlyName,
+    });
+
+    if (error) {
+      throw new Error(`MFA enrollment error: ${error.message}`);
+    }
+
+    if (!data) {
+      throw new Error('MFA enrollment failed: No data returned');
+    }
+
+    return {
+      id: data.id,
+      totp: data.totp ? {
+        qr_code: data.totp.qr_code,
+        secret: data.totp.secret,
+        uri: data.totp.uri,
+      } : undefined,
+    };
+  }
+
+  async verifyMFA(params: MFAVerifyParams): Promise<void> {
+    // For TOTP enrollment verification, we need to use challenge
+    let challengeId = params.challengeId;
+    
+    if (!challengeId) {
+      // Create a challenge if not provided
+      const { data: challengeData, error: challengeError } = await this.client.auth.mfa.challenge({
+        factorId: params.factorId,
+      });
+
+      if (challengeError) {
+        throw new Error(`MFA challenge error: ${challengeError.message}`);
+      }
+
+      challengeId = challengeData.id;
+    }
+
+    const { error } = await this.client.auth.mfa.verify({
+      factorId: params.factorId,
+      challengeId: challengeId,
+      code: params.code,
+    });
+
+    if (error) {
+      throw new Error(`MFA verification error: ${error.message}`);
+    }
+  }
+
+  async unenrollMFA(factorId: string): Promise<void> {
+    const { error } = await this.client.auth.mfa.unenroll({
+      factorId,
+    });
+
+    if (error) {
+      throw new Error(`MFA unenrollment error: ${error.message}`);
+    }
+  }
+
+  async listMFAFactors(): Promise<MFAFactor[]> {
+    const { data, error } = await this.client.auth.mfa.listFactors();
+
+    if (error) {
+      throw new Error(`List MFA factors error: ${error.message}`);
+    }
+
+    if (!data) {
+      return [];
+    }
+
+    return data.totp.map((factor) => ({
+      id: factor.id,
+      type: 'totp' as const,
+      status: factor.status as 'verified' | 'unverified',
+      friendlyName: factor.friendly_name,
+    }));
   }
 }

@@ -1,7 +1,82 @@
+/**
+ * Profile Page
+ * 
+ * User profile management with authentication required.
+ */
+
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { UserLayout } from '@/layouts';
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '@/components';
+import { MFASection } from '@/components/profile/MFASection';
+import { useAuth } from '@/contexts';
+import { getConfig } from '@/abstractions/config';
 
-export default function Profile() {
+export default function ProfilePage() {
+  const router = useRouter();
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/auth/login?redirect=/profile');
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  // Load user data
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email);
+      setFirstName(user.metadata?.firstName as string || '');
+      setLastName(user.metadata?.lastName as string || '');
+    }
+  }, [user]);
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+    setIsUpdating(true);
+
+    try {
+      const { auth } = getConfig().providers;
+      await auth.updateUser(user!.id, {
+        firstName,
+        lastName,
+      });
+      setMessage('Profile updated successfully!');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update profile');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!isAuthenticated || !user) {
+    return null;
+  }
+
   return (
     <UserLayout>
       <div className="space-y-6">
@@ -19,68 +94,75 @@ export default function Profile() {
                 <CardTitle>Personal Information</CardTitle>
               </CardHeader>
               <CardContent>
-                <form className="space-y-4">
+                <form onSubmit={handleUpdateProfile} className="space-y-4">
+                  {message && (
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <p className="text-sm text-green-600">{message}</p>
+                    </div>
+                  )}
+
+                  {error && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                      <p className="text-sm text-red-600">{error}</p>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                       label="First Name"
                       type="text"
                       placeholder="John"
-                      defaultValue="John"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      disabled={isUpdating}
                     />
                     <Input
                       label="Last Name"
                       type="text"
                       placeholder="Doe"
-                      defaultValue="Doe"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      disabled={isUpdating}
                     />
                   </div>
                   <Input
                     label="Email Address"
                     type="email"
                     placeholder="john.doe@example.com"
-                    defaultValue="john.doe@example.com"
+                    value={email}
+                    disabled
                   />
-                  <Input
-                    label="Phone Number"
-                    type="tel"
-                    placeholder="+1 (555) 123-4567"
-                  />
+                  <p className="text-xs text-gray-500">
+                    Email cannot be changed. Contact support if you need to update your email.
+                  </p>
                   <div className="flex justify-end space-x-3">
-                    <Button variant="secondary">Cancel</Button>
-                    <Button variant="primary">Save Changes</Button>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => {
+                        setFirstName(user.metadata?.firstName as string || '');
+                        setLastName(user.metadata?.lastName as string || '');
+                        setMessage('');
+                        setError('');
+                      }}
+                      disabled={isUpdating}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={isUpdating}
+                    >
+                      {isUpdating ? 'Saving...' : 'Save Changes'}
+                    </Button>
                   </div>
                 </form>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Change Password</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form className="space-y-4">
-                  <Input
-                    label="Current Password"
-                    type="password"
-                    placeholder="Enter current password"
-                  />
-                  <Input
-                    label="New Password"
-                    type="password"
-                    placeholder="Enter new password"
-                  />
-                  <Input
-                    label="Confirm New Password"
-                    type="password"
-                    placeholder="Confirm new password"
-                  />
-                  <div className="flex justify-end space-x-3">
-                    <Button variant="secondary">Cancel</Button>
-                    <Button variant="primary">Update Password</Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+            {/* MFA Section */}
+            <MFASection />
 
             <Card>
               <CardHeader>
@@ -131,7 +213,8 @@ export default function Profile() {
               <CardContent>
                 <div className="text-center">
                   <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl font-bold">
-                    JD
+                    {firstName?.[0]?.toUpperCase() || email[0]?.toUpperCase()}
+                    {lastName?.[0]?.toUpperCase() || ''}
                   </div>
                   <Button variant="secondary" size="sm" className="w-full">
                     Change Photo
@@ -150,17 +233,17 @@ export default function Profile() {
               <CardContent>
                 <div className="space-y-3 text-sm">
                   <div>
-                    <p className="text-gray-500">Member Since</p>
-                    <p className="font-medium text-gray-900">January 15, 2024</p>
+                    <p className="text-gray-500">Email</p>
+                    <p className="font-medium text-gray-900 break-all">{email}</p>
                   </div>
                   <div>
                     <p className="text-gray-500">Account ID</p>
-                    <p className="font-medium text-gray-900">USR-8934567</p>
+                    <p className="font-medium text-gray-900 break-all text-xs">{user.id}</p>
                   </div>
                   <div>
                     <p className="text-gray-500">Role</p>
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      User
+                      {user.role}
                     </span>
                   </div>
                 </div>
