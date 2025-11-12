@@ -88,11 +88,7 @@ export class SupabaseAuthProvider implements IAuthProvider {
   async getUser(): Promise<User | null> {
     const { data, error } = await this.client.auth.getUser();
 
-    if (error) {
-      throw new Error(`Get user error: ${error.message}`);
-    }
-
-    if (!data.user) {
+    if (error || !data.user) {
       return null;
     }
 
