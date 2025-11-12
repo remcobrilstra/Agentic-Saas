@@ -30,6 +30,26 @@ export interface SignInParams {
   password: string;
 }
 
+export type OAuthProvider = 'google' | 'microsoft' | 'apple';
+
+export interface MFAEnrollParams {
+  factorType: 'totp';
+  friendlyName?: string;
+}
+
+export interface MFAFactor {
+  id: string;
+  type: 'totp';
+  status: 'verified' | 'unverified';
+  friendlyName?: string;
+}
+
+export interface MFAVerifyParams {
+  factorId: string;
+  code: string;
+  challengeId?: string;
+}
+
 export interface IAuthProvider {
   /**
    * Sign up a new user
@@ -70,4 +90,29 @@ export interface IAuthProvider {
    * Update user metadata
    */
   updateUser(userId: string, metadata: Record<string, unknown>): Promise<User>;
+
+  /**
+   * Sign in with OAuth provider (Google, Microsoft, Apple)
+   */
+  signInWithOAuth(provider: OAuthProvider, redirectTo?: string): Promise<{ url: string }>;
+
+  /**
+   * Enroll a new MFA factor for the current user
+   */
+  enrollMFA(params: MFAEnrollParams): Promise<{ id: string; totp?: { qr_code: string; secret: string; uri: string } }>;
+
+  /**
+   * Verify an MFA factor
+   */
+  verifyMFA(params: MFAVerifyParams): Promise<void>;
+
+  /**
+   * Unenroll an MFA factor
+   */
+  unenrollMFA(factorId: string): Promise<void>;
+
+  /**
+   * List all MFA factors for the current user
+   */
+  listMFAFactors(): Promise<MFAFactor[]>;
 }

@@ -1,14 +1,54 @@
+/**
+ * Dashboard Page
+ * 
+ * User dashboard with authentication required.
+ */
+
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { UserLayout } from '@/layouts';
 import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components';
+import { useAuth } from '@/contexts';
 
-export default function UserDashboard() {
+export default function DashboardPage() {
+  const router = useRouter();
+  const { user, isLoading, isAuthenticated } = useAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/auth/login?redirect=/dashboard');
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!isAuthenticated || !user) {
+    return null;
+  }
+
   return (
     <UserLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Welcome back, {(user.metadata?.firstName as string) || user.email}!
+          </h1>
           <p className="text-gray-600 mt-2">
-            Welcome back! Here's an overview of your account.
+            Here&apos;s an overview of your account.
           </p>
         </div>
 

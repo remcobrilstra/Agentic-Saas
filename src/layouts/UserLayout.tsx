@@ -8,6 +8,8 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts';
 
 export interface UserLayoutProps {
   children: React.ReactNode;
@@ -15,6 +17,18 @@ export interface UserLayoutProps {
 }
 
 export function UserLayout({ children, extraSections = [] }: UserLayoutProps) {
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -50,12 +64,12 @@ export function UserLayout({ children, extraSections = [] }: UserLayoutProps) {
               </div>
             </div>
             <div className="flex items-center">
-              <Link
-                href="/logout"
+              <button
+                onClick={handleLogout}
                 className="text-gray-500 hover:text-gray-700 text-sm font-medium"
               >
                 Logout
-              </Link>
+              </button>
             </div>
           </div>
         </div>
