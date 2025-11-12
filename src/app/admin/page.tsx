@@ -1,7 +1,43 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { AdminLayout } from '@/layouts';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components';
+import { useAuth } from '@/contexts';
+import { usePermission } from '@/hooks';
 
 export default function AdminDashboard() {
+  const router = useRouter();
+  const { isLoading, isAuthenticated } = useAuth();
+  const hasAdminAccess = usePermission('admin:access');
+
+  // Redirect if not authenticated or doesn't have admin access
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push('/auth/login?redirect=/admin');
+    } else if (!isLoading && isAuthenticated && !hasAdminAccess) {
+      router.push('/dashboard');
+    }
+  }, [isLoading, isAuthenticated, hasAdminAccess, router]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated or no admin access
+  if (!isAuthenticated || !hasAdminAccess) {
+    return null;
+  }
+
   return (
     <AdminLayout>
       <div className="space-y-6">
