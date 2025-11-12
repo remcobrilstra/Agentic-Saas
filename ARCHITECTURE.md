@@ -54,10 +54,15 @@ src/
 │   │   ├── types.ts
 │   │   ├── service.ts
 │   │   └── index.ts
-│   └── permissions/
+│   ├── permissions/
+│   │   ├── types.ts
+│   │   ├── service.ts
+│   │   └── index.ts
+│   └── notifications/
 │       ├── types.ts
 │       ├── service.ts
-│       └── index.ts
+│       ├── index.ts
+│       └── README.md
 │
 ├── components/           # Reusable UI components
 │   ├── Button.tsx
@@ -179,17 +184,36 @@ initializeConfig({
 3. **Build Optimization**: Next.js production build with Turbopack
 4. **Bundle Size**: Tree-shaking removes unused code
 
+## Implemented Modules
+
+### Notifications Module
+
+A flexible notification system with:
+- **Admin Management**: CRUD interface for notification types at `/admin/notifications`
+- **User Preferences**: User-specific preferences with fallback to defaults
+- **Multi-Channel**: Support for email, SMS, and push notifications
+- **Categories**: Organize notifications into logical groups (Account, Security, Marketing, etc.)
+- **API Routes**: RESTful endpoints for admin and user operations
+
+See `src/modules/notifications/README.md` for detailed documentation.
+
+Database tables:
+- `notification_types`: Defines available notification types
+- `notification_preferences`: Stores user-specific preferences
+
+Migration: `migrations/001_create_notifications_tables.sql`
+
 ## Future Enhancements
 
 Areas for extension:
 1. Add test infrastructure (Jest/Vitest)
-2. API routes for backend functionality
-3. Middleware for route protection
-4. Additional modules (billing, notifications, etc.)
-5. Error boundary components
-6. Loading states and suspense boundaries
-7. Internationalization (i18n)
-8. Theme system for dark mode
+2. Middleware for route protection and authentication
+3. Additional modules (billing, analytics, etc.)
+4. Error boundary components
+5. Loading states and suspense boundaries
+6. Internationalization (i18n)
+7. Theme system for dark mode
+8. Notification sending/delivery system (email service integration)
 
 ## Best Practices
 
