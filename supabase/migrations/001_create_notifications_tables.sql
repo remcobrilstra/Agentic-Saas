@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS notification_types (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(255) NOT NULL,
   description TEXT,
-  enabled_by_default BOOLEAN NOT NULL DEFAULT true,
+  enabledByDefault BOOLEAN NOT NULL DEFAULT true,
   channel VARCHAR(50) NOT NULL DEFAULT 'email',
   category VARCHAR(100) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -50,7 +50,7 @@ CREATE TRIGGER update_notification_preferences_updated_at
   EXECUTE FUNCTION update_updated_at_column();
 
 -- Insert sample notification types
-INSERT INTO notification_types (name, description, enabled_by_default, channel, category)
+INSERT INTO notification_types (name, description, enabledByDefault, channel, category)
 VALUES 
   ('Account Updates', 'Important updates about your account', true, 'email', 'Account'),
   ('Security Alerts', 'Notifications about security events and suspicious activity', true, 'email', 'Security'),
