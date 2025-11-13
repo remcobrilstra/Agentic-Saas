@@ -15,13 +15,6 @@ import {
   MFAVerifyParams,
 } from './auth';
 
-interface UserProfile {
-  id: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
-}
-
 export class SupabaseAuthProvider implements IAuthProvider {
   private client: SupabaseClient;
 
