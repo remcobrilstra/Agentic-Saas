@@ -32,26 +32,3 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
   EXECUTE FUNCTION handle_new_user();
-
--- Enable Row Level Security
-ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
-
--- Create policies for user_profiles
--- Users can read their own profile
-CREATE POLICY "Users can view own profile"
-  ON user_profiles
-  FOR SELECT
-  USING (auth.uid() = id);
-
--- Users can update their own profile (except role)
-CREATE POLICY "Users can update own profile"
-  ON user_profiles
-  FOR UPDATE
-  USING (auth.uid() = id)
-  WITH CHECK (auth.uid() = id);
-
--- Service role can do anything (for backend operations)
-CREATE POLICY "Service role can manage all profiles"
-  ON user_profiles
-  FOR ALL
-  USING (auth.jwt()->>'role' = 'service_role');
