@@ -8,7 +8,7 @@
 export interface User {
   id: string;
   email: string;
-  role?: string;
+  role: string;
   metadata?: Record<string, unknown>;
 }
 
