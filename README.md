@@ -197,9 +197,9 @@ The template is designed with testing in mind. Each module can be tested indepen
 ## 📚 Feature Documentation
 
 ### Subscription Management
-- **[SUBSCRIPTION_FEATURE.md](./SUBSCRIPTION_FEATURE.md)** - Complete technical documentation
-- **[TESTING_SUBSCRIPTIONS.md](./TESTING_SUBSCRIPTIONS.md)** - Testing guide with scenarios
-- **[QUICK_START_SUBSCRIPTIONS.md](./QUICK_START_SUBSCRIPTIONS.md)** - Quick start with code examples
+- **[SUBSCRIPTION_FEATURE.md](./docs/SUBSCRIPTION_FEATURE.md)** - Complete technical documentation
+- **[TESTING_SUBSCRIPTIONS.md](./docs/TESTING_SUBSCRIPTIONS.md)** - Testing guide with scenarios
+- **[QUICK_START_SUBSCRIPTIONS.md](./docs/QUICK_START_SUBSCRIPTIONS.md)** - Quick start with code examples
 
 ### External Resources
 - [Next.js Documentation](https://nextjs.org/docs)
