@@ -299,4 +299,35 @@ export class SubscriptionsService {
       subscription_id: subscriptionId,
     });
   }
+
+  /**
+   * Get all subscriptions with details (admin)
+   */
+  async getAllSubscriptions(): Promise<import('./types').SubscriptionWithDetails[]> {
+    const subscriptions = await this.db.query<Subscription>('subscriptions', {
+      status: 'active',
+    });
+
+    const subscriptionsWithDetails = [];
+
+    for (const subscription of subscriptions) {
+      const subscriptionType = await this.db.getById<SubscriptionType>(
+        'subscription_types',
+        subscription.subscription_type_id
+      );
+
+      const users = await this.getSubscriptionUsers(subscription.id);
+
+      if (subscriptionType) {
+        subscriptionsWithDetails.push({
+          ...subscription,
+          subscription_type: subscriptionType,
+          users,
+          user_count: users.length,
+        });
+      }
+    }
+
+    return subscriptionsWithDetails;
+  }
 }

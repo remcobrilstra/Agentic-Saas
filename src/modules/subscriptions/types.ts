@@ -73,6 +73,12 @@ export interface UserSubscription {
   role: SubscriptionUserRole;
 }
 
+export interface SubscriptionWithDetails extends Subscription {
+  subscription_type: SubscriptionType;
+  users: SubscriptionUser[];
+  user_count: number;
+}
+
 // Input types for creating/updating
 export interface CreateSubscriptionTypeInput {
   name: string;
