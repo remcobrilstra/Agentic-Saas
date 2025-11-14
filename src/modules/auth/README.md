@@ -83,7 +83,9 @@ function MyComponent() {
 
 ## Default Role
 
-All new users are automatically assigned the `'user'` role. The role is stored in the user's metadata and can be used for authorization checks.
+All new users are automatically assigned the `'user'` role. The role is stored in a separate `user_profiles` table that is automatically created when a user signs up (via database trigger). This separation allows for application-specific user data (like roles and custom fields) to be managed independently from the authentication provider.
+
+The auth module automatically merges data from both `auth.users` (Supabase) and `user_profiles` tables, so consumers of the auth module only see a single unified user object with the role included.
 
 ## OAuth Providers
 
@@ -150,9 +152,20 @@ export default function ProtectedPage() {
 The authentication module is built on the abstraction layer, making it easy to:
 
 1. **Replace the auth provider**: Implement `IAuthProvider` with a different backend
-2. **Add custom user fields**: Extend the `metadata` object in signup
+2. **Add custom user fields**: Extend the `user_profiles` table with additional columns for application-specific data
 3. **Add custom authentication flows**: Extend `AuthService` with new methods
 4. **Customize UI components**: The login/register pages are separate components
+
+### Adding Custom User Fields
+
+To add custom fields to user profiles:
+
+1. Create a new migration to add columns to the `user_profiles` table:
+```sql
+ALTER TABLE user_profiles ADD COLUMN custom_field VARCHAR(255);
+```
+
+2. The auth module will continue to work seamlessly, and you can query the additional fields through the database provider when needed.
 
 ## Testing
 
