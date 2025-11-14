@@ -5,6 +5,7 @@
  */
 
 import { getConfig } from '@/abstractions/config';
+import { QueryResult } from '@/abstractions/database';
 import { UserProfile, UpdateProfileParams, CreateUserParams } from './types';
 
 export class UserManagementService {
@@ -74,6 +75,30 @@ export class UserManagementService {
   async listUsers(filters?: Record<string, unknown>): Promise<UserProfile[]> {
     const { database } = getConfig().providers;
     return database.query<UserProfile>('profiles', filters);
+  }
+
+  /**
+   * List users with pagination and search
+   */
+  async listUsersWithPagination(options?: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    role?: string;
+  }): Promise<QueryResult<UserProfile>> {
+    const { database } = getConfig().providers;
+    
+    const queryOptions = {
+      pagination: {
+        page: options?.page || 1,
+        pageSize: options?.pageSize || 10,
+      },
+      filters: options?.role ? { role: options.role } : undefined,
+      search: options?.search ? { column: 'email', value: options.search } : undefined,
+      orderBy: { column: 'created_at', ascending: false },
+    };
+
+    return database.queryWithPagination<UserProfile>('user_profiles', queryOptions);
   }
 
   /**

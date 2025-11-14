@@ -5,11 +5,40 @@
  * easy replacement of the underlying database provider.
  */
 
+export interface QueryOptions {
+  filters?: Record<string, unknown>;
+  search?: {
+    column: string;
+    value: string;
+  };
+  pagination?: {
+    page: number;
+    pageSize: number;
+  };
+  orderBy?: {
+    column: string;
+    ascending?: boolean;
+  };
+}
+
+export interface QueryResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 export interface IDatabaseProvider {
   /**
    * Query records from a table with optional filters
    */
   query<T = unknown>(table: string, filters?: Record<string, unknown>): Promise<T[]>;
+
+  /**
+   * Query records with pagination and search support
+   */
+  queryWithPagination<T = unknown>(table: string, options?: QueryOptions): Promise<QueryResult<T>>;
 
   /**
    * Get a single record by ID

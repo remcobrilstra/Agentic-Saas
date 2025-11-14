@@ -3,7 +3,7 @@
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { IDatabaseProvider } from './database';
+import { IDatabaseProvider, QueryOptions, QueryResult } from './database';
 
 export class SupabaseDatabaseProvider implements IDatabaseProvider {
   private client: SupabaseClient;
@@ -28,6 +28,55 @@ export class SupabaseDatabaseProvider implements IDatabaseProvider {
     }
 
     return (data as T[]) || [];
+  }
+
+  async queryWithPagination<T = unknown>(table: string, options?: QueryOptions): Promise<QueryResult<T>> {
+    const page = options?.pagination?.page || 1;
+    const pageSize = options?.pagination?.pageSize || 10;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
+    // Build the query for data
+    let query = this.client.from(table).select('*', { count: 'exact' });
+
+    // Apply filters
+    if (options?.filters) {
+      Object.entries(options.filters).forEach(([key, value]) => {
+        query = query.eq(key, value);
+      });
+    }
+
+    // Apply search
+    if (options?.search) {
+      query = query.ilike(options.search.column, `%${options.search.value}%`);
+    }
+
+    // Apply ordering
+    if (options?.orderBy) {
+      query = query.order(options.orderBy.column, { 
+        ascending: options.orderBy.ascending ?? true 
+      });
+    }
+
+    // Apply pagination
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      throw new Error(`Database query error: ${error.message}`);
+    }
+
+    const total = count || 0;
+    const totalPages = Math.ceil(total / pageSize);
+
+    return {
+      data: (data as T[]) || [],
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
   }
 
   async getById<T = unknown>(table: string, id: string): Promise<T | null> {
