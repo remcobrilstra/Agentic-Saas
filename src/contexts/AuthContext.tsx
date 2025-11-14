@@ -66,16 +66,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async (_event: string, session: any) => {
           if (session?.user) {
-            setState({
-              user: {
-                id: session.user.id,
-                email: session.user.email,
-                role: session.user.user_metadata?.role || session.user.role || 'user',
-                metadata: session.user.user_metadata,
-              },
-              isLoading: false,
-              isAuthenticated: true,
-            });
+            // Fetch full user data including profile to get merged role information
+            try {
+              const user = await auth.getUser();
+              if (user) {
+                setState({
+                  user,
+                  isLoading: false,
+                  isAuthenticated: true,
+                });
+              }
+            } catch (error) {
+              console.error('Failed to fetch user in auth state change:', error);
+              // Fallback to session data
+              setState({
+                user: {
+                  id: session.user.id,
+                  email: session.user.email,
+                  role: session.user.user_metadata?.role || session.user.role || 'user',
+                  metadata: session.user.user_metadata,
+                },
+                isLoading: false,
+                isAuthenticated: true,
+              });
+            }
           } else {
             setState({
               user: null,

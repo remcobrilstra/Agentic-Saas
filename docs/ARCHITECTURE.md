@@ -197,6 +197,35 @@ A flexible notification system with:
 
 See `src/modules/notifications/README.md` for detailed documentation.
 
+### Auth Module
+
+The authentication module separates application-specific user data from the authentication provider:
+- **Auth Provider**: Handles authentication via Supabase (`auth.users` table)
+- **User Profiles**: Application-specific data stored in `user_profiles` table
+- **Automatic Merging**: The auth module automatically merges both data sources, hiding implementation details from consumers
+
+Database tables:
+- `user_profiles`: Stores application-specific user data (role, custom fields)
+  - Primary key references `auth.users(id)`
+  - Auto-created via database trigger on user signup
+  - Contains role field ('user' or 'admin')
+
+Migration: `migrations/002_create_user_profiles_table.sql`
+
+This architecture allows:
+1. Easy extension with custom user fields (just add columns to `user_profiles`)
+2. Clean separation between auth provider and application data
+3. Future-proof design for provider replacement
+
+### Notifications Module
+
+A flexible notification system with:
+- **Admin Management**: CRUD interface for notification types at `/admin/notifications`
+- **User Preferences**: User-specific preferences with fallback to defaults
+- **Multi-Channel**: Support for email, SMS, and push notifications
+- **Categories**: Organize notifications into logical groups (Account, Security, Marketing, etc.)
+- **API Routes**: RESTful endpoints for admin and user operations
+
 Database tables:
 - `notification_types`: Defines available notification types
 - `notification_preferences`: Stores user-specific preferences

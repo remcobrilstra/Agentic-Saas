@@ -22,6 +22,46 @@ export class SupabaseAuthProvider implements IAuthProvider {
     this.client = createClient(supabaseUrl, supabaseKey);
   }
 
+  /**
+   * Private method to fetch user profile and merge with auth user data
+   * This hides the implementation detail of having separate tables
+   */
+  private async getUserWithProfile(authUser: { id: string; email?: string; user_metadata?: Record<string, unknown>; role?: string }): Promise<User> {
+    try {
+      // Fetch user profile from user_profiles table
+      const { data: profile, error } = await this.client
+        .from('user_profiles')
+        .select('role')
+        .eq('id', authUser.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        // Log error but don't fail - fallback to metadata role
+        console.warn('Failed to fetch user profile:', error.message);
+      }
+
+      // Merge auth user data with profile data
+      // Priority: user_profiles.role > user_metadata.role > default 'user'
+      const role = profile?.role || authUser.user_metadata?.role as string || authUser.role || 'user';
+
+      return {
+        id: authUser.id,
+        email: authUser.email || '',
+        role,
+        metadata: authUser.user_metadata,
+      };
+    } catch (error) {
+      // Fallback to just auth user data if profile fetch fails
+      console.warn('Error in getUserWithProfile:', error);
+      return {
+        id: authUser.id,
+        email: authUser.email || '',
+        role: authUser.user_metadata?.role as string || authUser.role || 'user',
+        metadata: authUser.user_metadata,
+      };
+    }
+  }
+
   async signUp(params: SignUpParams): Promise<User> {
     const { data, error } = await this.client.auth.signUp({
       email: params.email,
@@ -42,12 +82,8 @@ export class SupabaseAuthProvider implements IAuthProvider {
       throw new Error('Sign up failed: No user returned');
     }
 
-    return {
-      id: data.user.id,
-      email: data.user.email!,
-      role: data.user.user_metadata?.role || data.user.role || 'user',
-      metadata: data.user.user_metadata,
-    };
+    // Merge auth user with profile data (profile created via trigger)
+    return this.getUserWithProfile(data.user);
   }
 
   async signIn(params: SignInParams): Promise<AuthSession> {
@@ -64,13 +100,11 @@ export class SupabaseAuthProvider implements IAuthProvider {
       throw new Error('Sign in failed: No session returned');
     }
 
+    // Merge auth user with profile data
+    const user = await this.getUserWithProfile(data.user);
+
     return {
-      user: {
-        id: data.user.id,
-        email: data.user.email!,
-        role: data.user.role,
-        metadata: data.user.user_metadata,
-      },
+      user,
       accessToken: data.session.access_token,
       refreshToken: data.session.refresh_token,
       expiresAt: data.session.expires_at,
@@ -92,12 +126,8 @@ export class SupabaseAuthProvider implements IAuthProvider {
       return null;
     }
 
-    return {
-      id: data.user.id,
-      email: data.user.email!,
-      role: data.user.role,
-      metadata: data.user.user_metadata,
-    };
+    // Merge auth user with profile data
+    return this.getUserWithProfile(data.user);
   }
 
   async getSession(): Promise<AuthSession | null> {
@@ -111,13 +141,11 @@ export class SupabaseAuthProvider implements IAuthProvider {
       return null;
     }
 
+    // Merge auth user with profile data
+    const user = await this.getUserWithProfile(data.session.user);
+
     return {
-      user: {
-        id: data.session.user.id,
-        email: data.session.user.email!,
-        role: data.session.user.role,
-        metadata: data.session.user.user_metadata,
-      },
+      user,
       accessToken: data.session.access_token,
       refreshToken: data.session.refresh_token,
       expiresAt: data.session.expires_at,
@@ -135,13 +163,11 @@ export class SupabaseAuthProvider implements IAuthProvider {
       throw new Error('Refresh session failed: No session returned');
     }
 
+    // Merge auth user with profile data
+    const user = await this.getUserWithProfile(data.session.user);
+
     return {
-      user: {
-        id: data.session.user.id,
-        email: data.session.user.email!,
-        role: data.session.user.role,
-        metadata: data.session.user.user_metadata,
-      },
+      user,
       accessToken: data.session.access_token,
       refreshToken: data.session.refresh_token,
       expiresAt: data.session.expires_at,
@@ -169,12 +195,8 @@ export class SupabaseAuthProvider implements IAuthProvider {
       throw new Error('Update user failed: No user returned');
     }
 
-    return {
-      id: data.user.id,
-      email: data.user.email!,
-      role: data.user.role,
-      metadata: data.user.user_metadata,
-    };
+    // Merge auth user with profile data
+    return this.getUserWithProfile(data.user);
   }
 
   async signInWithOAuth(provider: OAuthProvider, redirectTo?: string): Promise<{ url: string }> {
