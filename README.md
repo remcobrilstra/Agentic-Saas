@@ -194,6 +194,25 @@ The template is designed with testing in mind. Each module can be tested indepen
 - Input validation with Zod schemas
 - Role-based access control
 
+## 🚀 CI/CD Pipeline
+
+The project includes GitHub Actions workflows for automated testing and deployment:
+
+### PR Validation
+- **Trigger**: Pull requests to `main` branch
+- **Jobs**: Lint, Build, Test
+- Ensures code quality before merging
+
+### Vercel Deployment
+- **Trigger**: Push to `main` branch
+- **Action**: Automatically deploys to Vercel production
+- **Setup Required**: Configure GitHub secrets for Vercel deployment
+  - `VERCEL_TOKEN`
+  - `VERCEL_ORG_ID`
+  - `VERCEL_PROJECT_ID`
+
+See [.github/workflows/README.md](./.github/workflows/README.md) for detailed setup instructions.
+
 ## 📚 Feature Documentation
 
 ### Subscription Management
