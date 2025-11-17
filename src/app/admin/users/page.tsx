@@ -14,6 +14,9 @@ export default function UsersManagement() {
   const { isLoading, isAuthenticated } = useAuth();
   const hasAdminAccess = usePermission('admin:access');
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const projectKey = supabaseUrl ? supabaseUrl.split('https://')[1]?.split('.supabase.co')[0] || '' : '';
+
   // State for users data
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true);
@@ -186,9 +189,19 @@ export default function UsersManagement() {
               Manage user accounts, roles, and permissions.
             </p>
           </div>
-          <Button variant="primary" onClick={() => setIsCreateModalOpen(true)}>
-            Add New User
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="primary" onClick={() => setIsCreateModalOpen(true)}>
+              Add New User
+            </Button>
+            <a
+              href={`https://supabase.com/dashboard/project/${projectKey}/auth/users?sortBy=id`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Manage in Supabase
+            </a>
+          </div>
         </div>
 
         <Card>
