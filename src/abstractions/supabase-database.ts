@@ -33,6 +33,58 @@ export class SupabaseDatabaseProvider implements IDatabaseProvider {
   async queryWithPagination<T = unknown>(table: string, options?: QueryOptions): Promise<QueryResult<T>> {
     const page = options?.pagination?.page || 1;
     const pageSize = options?.pagination?.pageSize || 10;
+
+    // Special handling for user_profiles - use RPC function to get complete user data
+    if (table === 'user_profiles') {
+      const { data, error } = await this.client.rpc('get_users_paginated', {
+        search_email: options?.search?.value || null,
+        filter_role: options?.filters?.role || null,
+        page_number: page,
+        page_size: pageSize,
+      });
+
+      if (error) {
+        throw new Error(`Database query error: ${error.message}`);
+      }
+
+      interface UserRPCResult {
+        id: string;
+        email: string;
+        role: string;
+        first_name: string | null;
+        last_name: string | null;
+        avatar_url: string | null;
+        created_at: string;
+        updated_at: string;
+        total_count: number;
+      }
+
+      const results = (data || []) as UserRPCResult[];
+      const total = results.length > 0 ? Number(results[0].total_count) : 0;
+      const totalPages = Math.ceil(total / pageSize);
+
+      // Map database fields to match UserProfile interface
+      const mappedData = results.map((row: UserRPCResult) => ({
+        id: row.id,
+        email: row.email,
+        role: row.role,
+        firstName: row.first_name ?? undefined,
+        lastName: row.last_name ?? undefined,
+        avatarUrl: row.avatar_url ?? undefined,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+      }));
+
+      return {
+        data: mappedData as T[],
+        total,
+        page,
+        pageSize,
+        totalPages,
+      };
+    }
+
+    // Standard query for other tables
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 

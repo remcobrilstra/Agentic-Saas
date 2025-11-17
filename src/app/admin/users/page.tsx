@@ -9,6 +9,23 @@ import { usePermission } from '@/hooks';
 import { UserManagementService } from '@/modules/user-management';
 import { UserProfile } from '@/modules/user-management/types';
 
+// Helper function to format dates
+const formatDate = (date: string | Date): string => {
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(dateObj.getTime())) {
+      return '-';
+    }
+    return dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  } catch {
+    return '-';
+  }
+};
+
 export default function UsersManagement() {
   const router = useRouter();
   const { isLoading, isAuthenticated } = useAuth();
@@ -279,7 +296,7 @@ export default function UsersManagement() {
                           </span>
                         </td>
                         <td className="py-4 px-4 text-gray-600">
-                          {new Date(user.createdAt).toLocaleDateString()}
+                          {formatDate(user.createdAt)}
                         </td>
                         <td className="py-4 px-4">
                           <div className="flex space-x-2">
