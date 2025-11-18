@@ -47,8 +47,11 @@ export function Header({ showDashboardLink = true }: HeaderProps) {
 
   // Get user initials for avatar
   const getUserInitials = () => {
-    if (user?.metadata?.firstName && user?.metadata?.lastName) {
-      return `${user.metadata.firstName[0]}${user.metadata.lastName[0]}`.toUpperCase();
+    const firstName = user?.metadata?.firstName as string | undefined;
+    const lastName = user?.metadata?.lastName as string | undefined;
+    
+    if (firstName && lastName) {
+      return `${firstName[0]}${lastName[0]}`.toUpperCase();
     }
     if (user?.email) {
       return user.email.substring(0, 2).toUpperCase();
@@ -98,9 +101,11 @@ export function Header({ showDashboardLink = true }: HeaderProps) {
                       {/* User Info */}
                       <div className="px-4 py-3 border-b border-gray-200">
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {user?.metadata?.firstName && user?.metadata?.lastName
-                            ? `${user.metadata.firstName} ${user.metadata.lastName}`
-                            : user?.email}
+                          {(() => {
+                            const firstName = user?.metadata?.firstName as string | undefined;
+                            const lastName = user?.metadata?.lastName as string | undefined;
+                            return firstName && lastName ? `${firstName} ${lastName}` : user?.email;
+                          })()}
                         </p>
                         <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                       </div>
