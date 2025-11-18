@@ -6,6 +6,7 @@ A reusable, production-ready foundation for building microSaaS applications with
 
 - **Modular Architecture**: Independent modules that can be easily extended or replaced
 - **Abstraction Layers**: Swappable providers for auth (Supabase), database (Supabase), and payments (Stripe)
+- **Subscription Management**: Complete subscription system with feature flags and quota tracking
 - **TypeScript**: Full type safety throughout the application
 - **Tailwind CSS**: Rapid UI development with utility-first CSS
 - **Role-Based Access Control**: Built-in permissions system
@@ -27,7 +28,8 @@ src/
 │   └── config.ts       # Provider configuration system
 ├── modules/            # Core feature modules
 │   ├── user-management/
-│   └── permissions/
+│   ├── permissions/
+│   └── subscriptions/
 ├── components/         # Reusable UI components
 │   ├── Button.tsx
 │   ├── Card.tsx
@@ -192,8 +194,14 @@ The template is designed with testing in mind. Each module can be tested indepen
 - Input validation with Zod schemas
 - Role-based access control
 
-## 📚 Learn More
+## 📚 Feature Documentation
 
+### Subscription Management
+- **[SUBSCRIPTION_FEATURE.md](./docs/SUBSCRIPTION_FEATURE.md)** - Complete technical documentation
+- **[TESTING_SUBSCRIPTIONS.md](./docs/TESTING_SUBSCRIPTIONS.md)** - Testing guide with scenarios
+- **[QUICK_START_SUBSCRIPTIONS.md](./docs/QUICK_START_SUBSCRIPTIONS.md)** - Quick start with code examples
+
+### External Resources
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Supabase Documentation](https://supabase.com/docs)
 - [Stripe Documentation](https://stripe.com/docs)

@@ -8,12 +8,96 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { UserLayout } from '@/layouts';
 import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '@/components';
 import { MFASection } from '@/components/profile/MFASection';
 import { NotificationPreferencesSection } from '@/components/profile/NotificationPreferencesSection';
 import { useAuth } from '@/contexts';
+import { useUserSubscriptions } from '@/hooks';
 import { getConfig } from '@/abstractions/config';
+
+function SubscriptionCard() {
+  const { subscriptions, isLoading } = useUserSubscriptions();
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Subscription</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-4">
+            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const hasSubscription = subscriptions.length > 0;
+  const currentSubscription = subscriptions[0];
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Subscription</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {hasSubscription && currentSubscription ? (
+          <div className="space-y-3">
+            <div>
+              <p className="text-gray-500 text-sm">Current Plan</p>
+              <p className="font-semibold text-lg text-gray-900">
+                {currentSubscription.subscription_type.name}
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-500 text-sm">Price</p>
+              <p className="font-medium text-gray-900">
+                ${currentSubscription.subscription_type.price_monthly?.toFixed(2) || '0.00'}/month
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-500 text-sm">Status</p>
+              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                currentSubscription.subscription.status === 'active'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-gray-100 text-gray-800'
+              }`}>
+                {currentSubscription.subscription.status}
+              </span>
+            </div>
+            <div>
+              <p className="text-gray-500 text-sm">Started</p>
+              <p className="text-sm text-gray-900">
+                {new Date(currentSubscription.subscription.start_date).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="pt-3">
+              <Link href="/subscription">
+                <Button variant="secondary" size="sm" className="w-full">
+                  Manage Subscription
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-gray-600">
+              You don&apos;t have an active subscription.
+            </p>
+            <Link href="/subscription">
+              <Button variant="primary" size="sm" className="w-full">
+                View Plans
+              </Button>
+            </Link>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -213,6 +297,8 @@ export default function ProfilePage() {
                 </div>
               </CardContent>
             </Card>
+
+            <SubscriptionCard />
 
             <Card>
               <CardHeader>

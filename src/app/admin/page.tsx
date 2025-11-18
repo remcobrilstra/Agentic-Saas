@@ -54,7 +54,7 @@ export default function AdminDashboard() {
               <CardTitle>Total Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-600">1,234</div>
+              <div className="text-3xl font-bold text-blue-600">1,337</div>
               <p className="text-sm text-gray-500 mt-2">+12% from last month</p>
             </CardContent>
           </Card>
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
               <CardTitle>Active Subscriptions</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-600">856</div>
+              <div className="text-3xl font-bold text-green-600">420</div>
               <p className="text-sm text-gray-500 mt-2">+8% from last month</p>
             </CardContent>
           </Card>
@@ -76,16 +76,6 @@ export default function AdminDashboard() {
             <CardContent>
               <div className="text-3xl font-bold text-indigo-600">$42,500</div>
               <p className="text-sm text-gray-500 mt-2">+15% from last month</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Support Tickets</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-600">23</div>
-              <p className="text-sm text-gray-500 mt-2">-5% from last month</p>
             </CardContent>
           </Card>
         </div>
