@@ -9,8 +9,8 @@ export interface UserProfile {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string | Date;
+  updatedAt: string | Date;
 }
 
 export interface UpdateProfileParams {

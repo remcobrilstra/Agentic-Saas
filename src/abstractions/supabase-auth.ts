@@ -19,7 +19,12 @@ export class SupabaseAuthProvider implements IAuthProvider {
   private client: SupabaseClient;
 
   constructor(supabaseUrl: string, supabaseKey: string) {
-    this.client = createClient(supabaseUrl, supabaseKey);
+    this.client = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+      },
+    });
   }
 
   /**
@@ -27,6 +32,7 @@ export class SupabaseAuthProvider implements IAuthProvider {
    * This hides the implementation detail of having separate tables
    */
   private async getUserWithProfile(authUser: { id: string; email?: string; user_metadata?: Record<string, unknown>; role?: string }): Promise<User> {
+    console.log('Fetching user profile for user:', authUser.id);
     try {
       // Fetch user profile from user_profiles table
       const { data: profile, error } = await this.client
@@ -34,6 +40,7 @@ export class SupabaseAuthProvider implements IAuthProvider {
         .select('role')
         .eq('id', authUser.id)
         .single();
+      console.log('Profile fetch result:', { profile, error });
 
       if (error && error.code !== 'PGRST116') {
         // Log error but don't fail - fallback to metadata role
@@ -87,10 +94,12 @@ export class SupabaseAuthProvider implements IAuthProvider {
   }
 
   async signIn(params: SignInParams): Promise<AuthSession> {
+    console.log('Starting signIn with params:', { email: params.email });
     const { data, error } = await this.client.auth.signInWithPassword({
       email: params.email,
       password: params.password,
     });
+    console.log('signInWithPassword returned:', { data: !!data, error });
 
     if (error) {
       throw new Error(`Sign in error: ${error.message}`);
