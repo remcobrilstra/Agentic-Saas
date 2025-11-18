@@ -1,28 +1,11 @@
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Header } from '@/components';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header with Login link */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-gray-900">microSaaS</h2>
-            <div className="flex items-center space-x-4">
-              <Link href="/auth/login" className="text-gray-600 hover:text-gray-900">
-                Login
-              </Link>
-              <Link 
-                href="/auth/register" 
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Unified Header */}
+      <Header showDashboardLink={true} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
