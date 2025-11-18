@@ -14,6 +14,7 @@ Runs on every pull request to the `main` branch.
 - **Test**: Runs unit tests (currently skips if no tests are configured)
 
 **Notes:**
+- Uses Node.js 20 (required by Next.js >= 16)
 - The build job uses dummy environment variables to allow the build to complete
 - Real environment variables will be configured in Vercel for production
 
