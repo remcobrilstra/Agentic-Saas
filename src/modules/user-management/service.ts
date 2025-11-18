@@ -14,7 +14,7 @@ export class UserManagementService {
    */
   async getUserProfile(userId: string): Promise<UserProfile | null> {
     const { database } = getConfig().providers;
-    return database.getById<UserProfile>('profiles', userId);
+    return database.getById<UserProfile>('user_profiles', userId);
   }
 
   /**
@@ -34,12 +34,10 @@ export class UserManagementService {
     });
 
     // Create profile
-    const profile = await database.insert<UserProfile>('profiles', {
+    const profile = await database.insert<UserProfile>('user_profiles', {
       id: user.id,
       email: user.email,
       role: params.role || 'user',
-      firstName: params.firstName,
-      lastName: params.lastName,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -53,8 +51,7 @@ export class UserManagementService {
   async updateProfile(userId: string, params: UpdateProfileParams): Promise<UserProfile> {
     const { database } = getConfig().providers;
 
-    const profile = await database.update<UserProfile>('profiles', userId, {
-      ...params,
+    const profile = await database.update<UserProfile>('user_profiles', userId, {
       updatedAt: new Date(),
     });
 
@@ -66,7 +63,7 @@ export class UserManagementService {
    */
   async deleteUser(userId: string): Promise<void> {
     const { database } = getConfig().providers;
-    await database.delete('profiles', userId);
+    await database.delete('user_profiles', userId);
   }
 
   /**
@@ -74,7 +71,7 @@ export class UserManagementService {
    */
   async listUsers(filters?: Record<string, unknown>): Promise<UserProfile[]> {
     const { database } = getConfig().providers;
-    return database.query<UserProfile>('profiles', filters);
+    return database.query<UserProfile>('user_profiles', filters);
   }
 
   /**

@@ -34,37 +34,46 @@ export class SupabaseDatabaseProvider implements IDatabaseProvider {
     const page = options?.pagination?.page || 1;
     const pageSize = options?.pagination?.pageSize || 10;
 
-    // Special handling for user_profiles - use RPC function to get complete user data
+    // Special handling for user_profiles - use view to get complete user data
     if (table === 'user_profiles') {
-      const { data, error } = await this.client.rpc('get_users_paginated', {
-        search_email: options?.search?.value || null,
-        filter_role: options?.filters?.role || null,
-        page_number: page,
-        page_size: pageSize,
-      });
+      // Build the query for data
+      let query = this.client.from('users_with_profiles').select('*', { count: 'exact' });
+
+      // Apply filters
+      if (options?.filters) {
+        Object.entries(options.filters).forEach(([key, value]) => {
+          query = query.eq(key, value);
+        });
+      }
+
+      // Apply search
+      if (options?.search) {
+        query = query.ilike('email', `%${options.search.value}%`);
+      }
+
+      // Apply ordering
+      if (options?.orderBy) {
+        query = query.order(options.orderBy.column, { 
+          ascending: options.orderBy.ascending ?? true 
+        });
+      }
+
+      // Apply pagination
+      const from = (page - 1) * pageSize;
+      const to = from + pageSize - 1;
+      query = query.range(from, to);
+
+      const { data, error, count } = await query;
 
       if (error) {
         throw new Error(`Database query error: ${error.message}`);
       }
 
-      interface UserRPCResult {
-        id: string;
-        email: string;
-        role: string;
-        first_name: string | null;
-        last_name: string | null;
-        avatar_url: string | null;
-        created_at: string;
-        updated_at: string;
-        total_count: number;
-      }
-
-      const results = (data || []) as UserRPCResult[];
-      const total = results.length > 0 ? Number(results[0].total_count) : 0;
+      const total = count || 0;
       const totalPages = Math.ceil(total / pageSize);
 
       // Map database fields to match UserProfile interface
-      const mappedData = results.map((row: UserRPCResult) => ({
+      const mappedData = (data || []).map((row: any) => ({
         id: row.id,
         email: row.email,
         role: row.role,
