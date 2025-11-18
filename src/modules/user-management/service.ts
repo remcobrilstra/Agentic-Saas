@@ -52,6 +52,7 @@ export class UserManagementService {
     const { database } = getConfig().providers;
 
     const profile = await database.update<UserProfile>('user_profiles', userId, {
+      ...params,
       updatedAt: new Date(),
     });
 

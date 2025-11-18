@@ -58,7 +58,8 @@ export class PermissionsService {
   /**
    * Check if a user has access to a resource
    */
-  async checkAccess(_userId: string, _permission: Permission): Promise<boolean> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async checkAccess(userId: string, permission: Permission): Promise<boolean> {
     // In a real implementation, this would fetch the user's role from the database
     // For now, we'll return true for demonstration
     // This is an extension point where you can add custom logic

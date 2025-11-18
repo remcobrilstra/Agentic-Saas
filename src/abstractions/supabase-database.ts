@@ -73,7 +73,17 @@ export class SupabaseDatabaseProvider implements IDatabaseProvider {
       const totalPages = Math.ceil(total / pageSize);
 
       // Map database fields to match UserProfile interface
-      const mappedData = (data || []).map((row: any) => ({
+      type UserProfileRow = {
+        id: string;
+        email: string;
+        role: string;
+        first_name?: string;
+        last_name?: string;
+        avatar_url?: string;
+        created_at: string;
+        updated_at: string;
+      };
+      const mappedData = (data || []).map((row: UserProfileRow) => ({
         id: row.id,
         email: row.email,
         role: row.role,
