@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { UserLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, Spinner, Badge, Alert } from '@/components';
 import { MFASection } from '@/components/profile/MFASection';
 import { NotificationPreferencesSection } from '@/components/profile/NotificationPreferencesSection';
 import { useAuth } from '@/contexts';
@@ -28,7 +28,7 @@ function SubscriptionCard() {
         </CardHeader>
         <CardContent>
           <div className="text-center py-4">
-            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <Spinner size="sm" className="border-primary" />
           </div>
         </CardContent>
       </Card>
@@ -60,13 +60,11 @@ function SubscriptionCard() {
             </div>
             <div>
               <p className="text-gray-500 text-sm">Status</p>
-              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                currentSubscription.subscription.status === 'active'
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-100 text-gray-800'
-              }`}>
+              <Badge
+                variant={currentSubscription.subscription.status === 'active' ? 'success' : 'secondary'}
+              >
                 {currentSubscription.subscription.status}
-              </span>
+              </Badge>
             </div>
             <div>
               <p className="text-gray-500 text-sm">Started</p>
@@ -150,8 +148,8 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <Spinner size="lg" className="mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -181,15 +179,15 @@ export default function ProfilePage() {
               <CardContent>
                 <form onSubmit={handleUpdateProfile} className="space-y-4">
                   {message && (
-                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <p className="text-sm text-green-600">{message}</p>
-                    </div>
+                    <Alert variant="success">
+                      {message}
+                    </Alert>
                   )}
 
                   {error && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-sm text-red-600">{error}</p>
-                    </div>
+                    <Alert variant="destructive">
+                      {error}
+                    </Alert>
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -290,9 +288,9 @@ export default function ProfilePage() {
                   </div>
                   <div>
                     <p className="text-gray-500">Role</p>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
                       {user.role}
-                    </span>
+                    </Badge>
                   </div>
                 </div>
               </CardContent>

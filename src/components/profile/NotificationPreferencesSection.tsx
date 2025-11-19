@@ -7,7 +7,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Spinner, Alert } from '@/components';
 import { UserNotificationPreference } from '@/modules/notifications';
 
 interface NotificationPreferencesSectionProps {
@@ -107,7 +107,7 @@ export function NotificationPreferencesSection({ userId }: NotificationPreferenc
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <Spinner size="md" />
             <p className="text-muted-foreground mt-2">Loading preferences...</p>
           </div>
         </CardContent>
@@ -122,9 +122,9 @@ export function NotificationPreferencesSection({ userId }: NotificationPreferenc
       </CardHeader>
       <CardContent>
         {error && (
-          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-            <p className="text-sm text-destructive">{error}</p>
-          </div>
+          <Alert variant="destructive" className="mb-4">
+            {error}
+          </Alert>
         )}
 
         {preferences.length === 0 ? (

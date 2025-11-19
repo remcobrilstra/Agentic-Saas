@@ -7,7 +7,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, Alert } from '@/components';
 import { getConfig } from '@/abstractions/config';
 import { MFAFactor } from '@/abstractions/auth';
 
@@ -127,15 +127,15 @@ export function MFASection() {
           </p>
 
           {error && (
-            <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
-              <p className="text-sm text-destructive">{error}</p>
-            </div>
+            <Alert variant="destructive">
+              {error}
+            </Alert>
           )}
 
           {success && (
-            <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <p className="text-sm text-green-600">{success}</p>
-            </div>
+            <Alert variant="success">
+              {success}
+            </Alert>
           )}
 
           {!isEnrolling && !hasVerifiedFactors && (

@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { UserLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Spinner } from '@/components';
 import { useAuth } from '@/contexts';
 import { SubscriptionsService } from '@/modules/subscriptions';
 
@@ -48,7 +48,7 @@ function CheckoutContent() {
   if (isAuthLoading) {
     return (
       <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <Spinner size="lg" className="mb-4" />
         <p className="text-muted-foreground">Loading...</p>
       </div>
     );
@@ -172,7 +172,7 @@ export default function CheckoutPage() {
     <UserLayout>
       <Suspense fallback={
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <Spinner size="lg" className="mb-4" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       }>

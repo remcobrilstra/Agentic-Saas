@@ -9,7 +9,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Spinner, Badge } from '@/components';
 import { useAuth } from '@/contexts';
 import { useSubscription } from '@/hooks';
 
@@ -30,8 +30,8 @@ export default function DashboardPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <Spinner size="lg" className="mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -67,9 +67,9 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Status:</span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  <Badge variant="success">
                     Active
-                  </span>
+                  </Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Next Billing:</span>
@@ -196,9 +196,9 @@ export default function DashboardPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Basic Dashboard</CardTitle>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
                   Basic Plan
-                </span>
+                </Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -234,9 +234,9 @@ export default function DashboardPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Advanced Analytics</CardTitle>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-100">
                     Pro Plan
-                  </span>
+                  </Badge>
                 </div>
               </CardHeader>
               <CardContent>
@@ -284,9 +284,9 @@ export default function DashboardPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Advanced Analytics</CardTitle>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-800 hover:bg-purple-100">
                     Pro Plan Only
-                  </span>
+                  </Badge>
                 </div>
               </CardHeader>
               <CardContent>

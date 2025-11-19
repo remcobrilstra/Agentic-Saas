@@ -8,7 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { AdminLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, Spinner, Badge, Alert } from '@/components';
 import { NotificationType } from '@/modules/notifications';
 
 export default function AdminNotificationsPage() {
@@ -159,21 +159,21 @@ export default function AdminNotificationsPage() {
         </div>
 
         {message && (
-          <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-600">{message}</p>
-          </div>
+          <Alert variant="success">
+            {message}
+          </Alert>
         )}
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
+          <Alert variant="destructive">
+            {error}
+          </Alert>
         )}
 
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p className="text-gray-600 mt-4">Loading...</p>
+            <Spinner size="lg" className="mb-4" />
+            <p className="text-muted-foreground mt-4">Loading...</p>
           </div>
         ) : (
           <Card>
@@ -223,22 +223,22 @@ export default function AdminNotificationsPage() {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
                               {notification.category}
-                            </span>
+                            </Badge>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {notification.channel}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             {notification.enabledByDefault ? (
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                              <Badge variant="success">
                                 Enabled
-                              </span>
+                              </Badge>
                             ) : (
-                              <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                              <Badge variant="secondary">
                                 Disabled
-                              </span>
+                              </Badge>
                             )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">

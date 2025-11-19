@@ -9,6 +9,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts';
+import { Spinner } from '@/components';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
@@ -33,8 +34,8 @@ export default function AuthCallbackPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
       <div className="text-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-        <p className="text-gray-600">Completing sign in...</p>
+        <Spinner size="lg" className="mb-4" />
+        <p className="text-muted-foreground">Completing sign in...</p>
       </div>
     </div>
   );

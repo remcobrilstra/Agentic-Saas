@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Spinner, Badge } from '@/components';
 import { useAuth } from '@/contexts';
 import { useUserSubscriptions } from '@/hooks';
 import { SubscriptionsService, SubscriptionType } from '@/modules/subscriptions';
@@ -47,7 +47,7 @@ export default function Subscription() {
     return (
       <UserLayout>
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <Spinner size="lg" className="mb-4" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </UserLayout>
@@ -96,13 +96,12 @@ export default function Subscription() {
                   <p className="text-sm text-muted-foreground mt-2">
                     Started: {new Date(currentSubscription.subscription.start_date).toLocaleDateString()}
                   </p>
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 ${
-                    currentSubscription.subscription.status === 'active'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-muted text-muted-foreground'
-                  }`}>
+                  <Badge
+                    variant={currentSubscription.subscription.status === 'active' ? 'success' : 'secondary'}
+                    className="mt-2"
+                  >
                     {currentSubscription.subscription.status}
-                  </span>
+                  </Badge>
                 </div>
                 <div className="text-right space-y-2">
                   <Button variant="secondary" size="sm">
@@ -142,9 +141,9 @@ export default function Subscription() {
                 <Card key={type.id} className={isPopular ? 'border-2 border-primary' : ''}>
                   <CardContent className="pt-6">
                     {isPopular && (
-                      <span className="inline-block px-3 py-1 text-xs font-semibold text-primary bg-primary/10 rounded-full mb-4">
+                      <Badge variant="default" className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
                         Most Popular
-                      </span>
+                      </Badge>
                     )}
                     <h3 className="text-2xl font-bold text-foreground">{type.name}</h3>
                     <div className="mt-4 flex items-baseline">
