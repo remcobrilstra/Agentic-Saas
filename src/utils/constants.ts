@@ -11,6 +11,8 @@ export const ROLES = {
   GUEST: 'guest',
 } as const;
 
+export const DEFAULT_USER_ROLE = ROLES.USER;
+
 export const SUBSCRIPTION_STATUS = {
   ACTIVE: 'active',
   CANCELED: 'canceled',

@@ -7,6 +7,7 @@
 import { getConfig } from '@/abstractions/config';
 import { OAuthProvider } from '@/abstractions/auth';
 import { LoginCredentials, RegisterCredentials, AuthUser } from './types';
+import { DEFAULT_USER_ROLE } from '@/utils/constants';
 
 export class AuthService {
   /**
@@ -21,14 +22,14 @@ export class AuthService {
       metadata: {
         firstName: credentials.firstName,
         lastName: credentials.lastName,
-        role: 'user', // Default role
+        role: DEFAULT_USER_ROLE, // Default role
       },
     });
 
     return {
       id: user.id,
       email: user.email,
-      role: user.role || 'user',
+      role: user.role || DEFAULT_USER_ROLE,
       metadata: user.metadata,
     };
   }
@@ -47,7 +48,7 @@ export class AuthService {
     return {
       id: session.user.id,
       email: session.user.email,
-      role: session.user.role || 'user',
+      role: session.user.role || DEFAULT_USER_ROLE,
       metadata: session.user.metadata,
     };
   }
@@ -82,7 +83,7 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      role: user.role || 'user',
+      role: user.role || DEFAULT_USER_ROLE,
       metadata: user.metadata,
     };
   }
@@ -105,7 +106,7 @@ export class AuthService {
     return {
       id: user.id,
       email: user.email,
-      role: user.role || 'user',
+      role: user.role || DEFAULT_USER_ROLE,
       metadata: user.metadata,
     };
   }
