@@ -29,7 +29,7 @@ export class SupportService {
    */
   static async getUserTickets(userId: string): Promise<SupportTicket[]> {
     const { database } = getConfig().providers;
-    return database.query<SupportTicket>('support_tickets', { userId });
+    return database.query<SupportTicket>('support_tickets', { user_id: userId });
   }
 
   /**
@@ -49,7 +49,7 @@ export class SupportService {
   ): Promise<SupportTicket> {
     const { database } = getConfig().providers;
     return database.insert<SupportTicket>('support_tickets', {
-      userId,
+      user_id: userId,
       subject: params.subject,
       message: params.message,
       status: 'open',
@@ -66,9 +66,9 @@ export class SupportService {
     const { database } = getConfig().providers;
     const updateData: Partial<SupportTicket> = { ...params };
     
-    // If adding a response, set respondedAt timestamp
+    // If adding a response, set responded_at timestamp
     if (params.response && !params.status) {
-      updateData.respondedAt = new Date();
+      updateData.responded_at = new Date().toISOString();
       updateData.status = 'in_progress';
     }
     
@@ -95,7 +95,7 @@ export class SupportService {
       if (a.category !== b.category) {
         return a.category.localeCompare(b.category);
       }
-      return a.orderIndex - b.orderIndex;
+      return a.order_index - b.order_index;
     });
   }
 
@@ -107,7 +107,7 @@ export class SupportService {
     const faqs = await database.query<FAQEntry>('faq_entries', { category });
     
     // Sort by order_index
-    return faqs.sort((a, b) => a.orderIndex - b.orderIndex);
+    return faqs.sort((a, b) => a.order_index - b.order_index);
   }
 
   /**
@@ -179,8 +179,8 @@ export class SupportService {
       question: params.question,
       answer: params.answer,
       category: params.category,
-      orderIndex: params.orderIndex ?? 0,
-      createdBy,
+      order_index: params.orderIndex ?? 0,
+      created_by: createdBy,
     });
   }
 

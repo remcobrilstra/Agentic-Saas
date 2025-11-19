@@ -87,7 +87,7 @@ export default function SupportPage() {
         {/* Success Message */}
         {submitSuccess && (
           <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
-            ✓ Your support ticket has been submitted successfully. We'll respond as soon as possible.
+            ✓ Your support ticket has been submitted successfully. We&apos;ll respond as soon as possible.
           </div>
         )}
 
@@ -225,7 +225,7 @@ export default function SupportPage() {
             </form>
           ) : (
             <p className="text-gray-600">
-              Can't find an answer in the FAQ? Submit a support ticket and our team will get back to you.
+              Can&apos;t find an answer in the FAQ? Submit a support ticket and our team will get back to you.
             </p>
           )}
         </Card>

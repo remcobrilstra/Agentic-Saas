@@ -6,14 +6,14 @@ export type SupportTicketStatus = 'open' | 'in_progress' | 'resolved' | 'closed'
 
 export interface SupportTicket {
   id: string;
-  userId: string;
+  user_id: string;
   subject: string;
   message: string;
   status: SupportTicketStatus;
   response?: string | null;
-  respondedAt?: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
+  responded_at?: Date | string | null;
+  created_at: Date | string;
+  updated_at: Date | string;
 }
 
 export interface CreateSupportTicketParams {
@@ -31,10 +31,10 @@ export interface FAQEntry {
   question: string;
   answer: string;
   category: string;
-  orderIndex: number;
-  createdBy?: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+  order_index: number;
+  created_by?: string | null;
+  created_at: Date | string;
+  updated_at: Date | string;
 }
 
 export interface CreateFAQEntryParams {

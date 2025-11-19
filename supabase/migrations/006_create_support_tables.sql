@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS support_tickets (
   status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
   response TEXT,
   responded_at TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create index for user_id to optimize queries
@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS faq_entries (
   category TEXT NOT NULL,
   order_index INTEGER DEFAULT 0,
   created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create index for category to optimize queries
@@ -34,6 +34,17 @@ CREATE INDEX IF NOT EXISTS idx_faq_entries_category ON faq_entries(category);
 
 -- Create index for order to support sorting
 CREATE INDEX IF NOT EXISTS idx_faq_entries_order ON faq_entries(order_index);
+
+-- Add triggers to update updated_at timestamp
+CREATE TRIGGER update_support_tickets_updated_at
+  BEFORE UPDATE ON support_tickets
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_faq_entries_updated_at
+  BEFORE UPDATE ON faq_entries
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
 
 -- Enable RLS (Row Level Security) for support_tickets
 ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;

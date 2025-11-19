@@ -42,10 +42,6 @@ export default function AdminSupportPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadData();
-  }, [activeTab]);
-
   const loadData = async () => {
     setIsLoading(true);
     setError(null);
@@ -53,7 +49,7 @@ export default function AdminSupportPage() {
       if (activeTab === 'tickets') {
         const ticketData = await SupportService.getAllTickets();
         setTickets(ticketData.sort((a, b) => 
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         ));
       } else {
         const faqData = await SupportService.getAllFAQs();
@@ -66,6 +62,11 @@ export default function AdminSupportPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
 
   const handleSelectTicket = (ticket: SupportTicket) => {
     setSelectedTicket(ticket);
@@ -124,7 +125,7 @@ export default function AdminSupportPage() {
       setFaqQuestion(faq.question);
       setFaqAnswer(faq.answer);
       setFaqCategory(faq.category);
-      setFaqOrder(faq.orderIndex.toString());
+      setFaqOrder(faq.order_index.toString());
     } else {
       setEditingFAQ(null);
       setFaqQuestion('');
@@ -269,8 +270,8 @@ export default function AdminSupportPage() {
                         {ticket.message}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {new Date(ticket.createdAt).toLocaleDateString()} at{' '}
-                        {new Date(ticket.createdAt).toLocaleTimeString()}
+                        {new Date(ticket.created_at).toLocaleDateString()} at{' '}
+                        {new Date(ticket.created_at).toLocaleTimeString()}
                       </p>
                     </div>
                   ))
@@ -373,7 +374,7 @@ export default function AdminSupportPage() {
                           <span className="text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">
                             {faq.category}
                           </span>
-                          <span className="text-xs text-gray-500">Order: {faq.orderIndex}</span>
+                          <span className="text-xs text-gray-500">Order: {faq.order_index}</span>
                         </div>
                         <h3 className="font-medium text-gray-900 mb-2">{faq.question}</h3>
                         <p className="text-gray-700 whitespace-pre-wrap">{faq.answer}</p>
