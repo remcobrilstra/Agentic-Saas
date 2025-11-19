@@ -7,6 +7,7 @@ A reusable, production-ready foundation for building microSaaS applications with
 - **Modular Architecture**: Independent modules that can be easily extended or replaced
 - **Abstraction Layers**: Swappable providers for auth (Supabase), database (Supabase), and payments (Stripe)
 - **Subscription Management**: Complete subscription system with feature flags and quota tracking
+- **User Support System**: FAQ management and support ticket system with search functionality
 - **TypeScript**: Full type safety throughout the application
 - **Tailwind CSS**: Rapid UI development with utility-first CSS
 - **Role-Based Access Control**: Built-in permissions system
@@ -29,7 +30,8 @@ src/
 ├── modules/            # Core feature modules
 │   ├── user-management/
 │   ├── permissions/
-│   └── subscriptions/
+│   ├── subscriptions/
+│   └── support/
 ├── components/         # Reusable UI components
 │   ├── Button.tsx
 │   ├── Card.tsx
@@ -219,6 +221,11 @@ See [.github/workflows/README.md](./.github/workflows/README.md) for detailed se
 - **[SUBSCRIPTION_FEATURE.md](./docs/SUBSCRIPTION_FEATURE.md)** - Complete technical documentation
 - **[TESTING_SUBSCRIPTIONS.md](./docs/TESTING_SUBSCRIPTIONS.md)** - Testing guide with scenarios
 - **[QUICK_START_SUBSCRIPTIONS.md](./docs/QUICK_START_SUBSCRIPTIONS.md)** - Quick start with code examples
+
+### User Support System
+- **User Features**: FAQ search with relevance scoring, support ticket submission
+- **Admin Features**: Ticket management with status tracking, FAQ content management
+- **Module Documentation**: See [src/modules/support/README.md](./src/modules/support/README.md)
 
 ### External Resources
 - [Next.js Documentation](https://nextjs.org/docs)
