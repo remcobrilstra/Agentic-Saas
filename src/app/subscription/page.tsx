@@ -47,8 +47,8 @@ export default function Subscription() {
     return (
       <UserLayout>
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </UserLayout>
     );
@@ -73,8 +73,8 @@ export default function Subscription() {
     <UserLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Subscription</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground">Subscription</h1>
+          <p className="text-muted-foreground mt-2">
             Manage your subscription plan and billing information.
           </p>
         </div>
@@ -87,19 +87,19 @@ export default function Subscription() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-2xl font-bold text-gray-900">
+                  <h3 className="text-2xl font-bold text-foreground">
                     {currentSubscription.subscription_type.name}
                   </h3>
-                  <p className="text-gray-600 mt-1">
+                  <p className="text-muted-foreground mt-1">
                     ${currentSubscription.subscription_type.price_monthly?.toFixed(2) || '0.00'} per month
                   </p>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-muted-foreground mt-2">
                     Started: {new Date(currentSubscription.subscription.start_date).toLocaleDateString()}
                   </p>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-2 ${
                     currentSubscription.subscription.status === 'active'
                       ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
+                      : 'bg-muted text-muted-foreground'
                   }`}>
                     {currentSubscription.subscription.status}
                   </span>
@@ -119,11 +119,11 @@ export default function Subscription() {
         )}
 
         {!hasSubscription && (
-          <Card className="border-2 border-blue-500">
+          <Card className="border-2 border-primary">
             <CardContent className="pt-6">
               <div className="text-center">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">No Active Subscription</h3>
-                <p className="text-gray-600 mb-4">
+                <h3 className="text-xl font-bold text-foreground mb-2">No Active Subscription</h3>
+                <p className="text-muted-foreground mb-4">
                   Choose a plan below to get started and unlock all features.
                 </p>
               </div>
@@ -132,29 +132,29 @@ export default function Subscription() {
         )}
 
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Available Plans</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-4">Available Plans</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {subscriptionTypes.map((type, idx) => {
               const isCurrent = hasSubscription && currentSubscription?.subscription_type.id === type.id;
               const isPopular = idx === 1; // Mark the second plan as popular
               
               return (
-                <Card key={type.id} className={isPopular ? 'border-2 border-blue-500' : ''}>
+                <Card key={type.id} className={isPopular ? 'border-2 border-primary' : ''}>
                   <CardContent className="pt-6">
                     {isPopular && (
-                      <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full mb-4">
+                      <span className="inline-block px-3 py-1 text-xs font-semibold text-primary bg-primary/10 rounded-full mb-4">
                         Most Popular
                       </span>
                     )}
-                    <h3 className="text-2xl font-bold text-gray-900">{type.name}</h3>
+                    <h3 className="text-2xl font-bold text-foreground">{type.name}</h3>
                     <div className="mt-4 flex items-baseline">
-                      <span className="text-4xl font-bold text-gray-900">
+                      <span className="text-4xl font-bold text-foreground">
                         ${type.price_monthly?.toFixed(0) || '0'}
                       </span>
-                      <span className="ml-2 text-gray-500">/per month</span>
+                      <span className="ml-2 text-muted-foreground">/per month</span>
                     </div>
                     {type.description && (
-                      <p className="text-sm text-gray-600 mt-2">{type.description}</p>
+                      <p className="text-sm text-muted-foreground mt-2">{type.description}</p>
                     )}
                     <ul className="mt-6 space-y-3">
                       {type.marketing_points?.map((point, i) => (
@@ -170,7 +170,7 @@ export default function Subscription() {
                               clipRule="evenodd"
                             />
                           </svg>
-                          <span className="text-gray-600 text-sm">{point}</span>
+                          <span className="text-muted-foreground text-sm">{point}</span>
                         </li>
                       ))}
                     </ul>
