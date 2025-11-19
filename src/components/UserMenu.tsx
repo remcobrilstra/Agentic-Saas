@@ -53,7 +53,7 @@ export function UserMenu() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full text-white font-semibold text-sm hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="flex items-center justify-center w-10 h-10 bg-primary rounded-full text-primary-foreground font-semibold text-sm hover:shadow-lg transition-shadow focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         aria-label="User menu"
         aria-expanded={isDropdownOpen}
       >
@@ -62,31 +62,31 @@ export function UserMenu() {
 
       {/* Dropdown Menu */}
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+        <div className="absolute right-0 mt-2 w-56 bg-popover rounded-lg shadow-lg border border-border py-1 z-50">
           {/* User Info */}
-          <div className="px-4 py-3 border-b border-gray-200">
-            <p className="text-sm font-medium text-gray-900 truncate">
+          <div className="px-4 py-3 border-b border-border">
+            <p className="text-sm font-medium text-foreground truncate">
               {(() => {
                 const firstName = user?.metadata?.firstName as string | undefined;
                 const lastName = user?.metadata?.lastName as string | undefined;
                 return firstName && lastName ? `${firstName} ${lastName}` : user?.email;
               })()}
             </p>
-            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
           </div>
 
           {/* Menu Items */}
           <div className="py-1">
             <Link
               href="/profile"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               onClick={() => setIsDropdownOpen(false)}
             >
               Profile
             </Link>
             <Link
               href="/subscription"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
               onClick={() => setIsDropdownOpen(false)}
             >
               Subscription
@@ -94,7 +94,7 @@ export function UserMenu() {
             {hasAdminAccess && (
               <Link
                 href="/admin"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                 onClick={() => setIsDropdownOpen(false)}
               >
                 <div className="flex items-center">
@@ -124,10 +124,10 @@ export function UserMenu() {
           </div>
 
           {/* Logout */}
-          <div className="border-t border-gray-200 py-1">
+          <div className="border-t border-border py-1">
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+              className="block w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors"
             >
               Logout
             </button>

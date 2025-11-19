@@ -19,12 +19,12 @@ export function Header({ showDashboardLink = true }: HeaderProps) {
   const { isAuthenticated } = useAuth();
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="bg-background shadow-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-900 hover:text-gray-700">
+            <Link href="/" className="text-xl font-bold text-foreground hover:text-foreground/80">
               microSaaS
             </Link>
           </div>
@@ -37,7 +37,7 @@ export function Header({ showDashboardLink = true }: HeaderProps) {
                 {showDashboardLink && (
                   <Link
                     href="/dashboard"
-                    className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+                    className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
                   >
                     Dashboard
                   </Link>
@@ -51,13 +51,13 @@ export function Header({ showDashboardLink = true }: HeaderProps) {
               <>
                 <Link
                   href="/auth/login"
-                  className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+                  className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
                 >
                   Login
                 </Link>
                 <Link
                   href="/auth/register"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium"
                 >
                   Sign Up
                 </Link>

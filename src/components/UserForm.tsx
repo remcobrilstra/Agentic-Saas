@@ -119,19 +119,19 @@ export function UserForm({ initialData, onSubmit, onCancel, isEditing = false }:
       )}
 
       <div>
-        <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="role" className="block text-sm font-medium text-foreground mb-1">
           Role
         </label>
         <select
           id="role"
           value={formData.role}
           onChange={(e) => handleChange('role', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700"
+          className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-foreground bg-background"
         >
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
-        {errors.role && <p className="mt-1 text-sm text-red-600">{errors.role}</p>}
+        {errors.role && <p className="mt-1 text-sm text-destructive">{errors.role}</p>}
       </div>
 
       <Input

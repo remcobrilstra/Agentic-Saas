@@ -107,8 +107,8 @@ export function NotificationPreferencesSection({ userId }: NotificationPreferenc
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="text-gray-600 mt-2">Loading preferences...</p>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <p className="text-muted-foreground mt-2">Loading preferences...</p>
           </div>
         </CardContent>
       </Card>
@@ -128,14 +128,14 @@ export function NotificationPreferencesSection({ userId }: NotificationPreferenc
         )}
 
         {preferences.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">
+          <p className="text-muted-foreground text-center py-8">
             No notification types configured yet.
           </p>
         ) : (
           <div className="space-y-6">
             {Object.entries(groupedPreferences).map(([category, categoryPrefs]) => (
               <div key={category}>
-                <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-3">
                   {category}
                 </h3>
                 <div className="space-y-4">
@@ -145,15 +145,15 @@ export function NotificationPreferencesSection({ userId }: NotificationPreferenc
                       className="flex items-center justify-between"
                     >
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-foreground">
                           {pref.notificationType.name}
                         </p>
                         {pref.notificationType.description && (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-muted-foreground">
                             {pref.notificationType.description}
                           </p>
                         )}
-                        <p className="text-xs text-gray-400 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1">
                           via {pref.notificationType.channel}
                         </p>
                       </div>
@@ -167,7 +167,7 @@ export function NotificationPreferencesSection({ userId }: NotificationPreferenc
                           }
                           disabled={updatingIds.has(pref.notificationType.id)}
                         />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600 peer-disabled:opacity-50"></div>
+                        <div className="w-11 h-6 bg-muted peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ring/30 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary peer-disabled:opacity-50"></div>
                       </label>
                     </div>
                   ))}
