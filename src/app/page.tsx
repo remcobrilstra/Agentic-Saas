@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent, Header } from '@/components';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Unified Header */}
       <Header showDashboardLink={true} />
 
