@@ -2,7 +2,7 @@ import React from 'react';
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning';
+  variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning' | 'popular';
   className?: string;
 }
 
@@ -14,6 +14,7 @@ export function Badge({ children, variant = 'default', className = '' }: BadgePr
     outline: 'text-foreground border border-input hover:bg-accent hover:text-accent-foreground',
     success: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400', // Keeping specific green for success for now, could be mapped to a theme var later
     warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    popular: 'bg-primary/10 text-primary hover:bg-primary/20',
   };
 
   return (
