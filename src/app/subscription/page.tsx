@@ -141,7 +141,7 @@ export default function Subscription() {
                 <Card key={type.id} className={isPopular ? 'border-2 border-primary' : ''}>
                   <CardContent className="pt-6">
                     {isPopular && (
-                      <Badge variant="default" className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">
+                      <Badge variant="popular" className="mb-4">
                         Most Popular
                       </Badge>
                     )}
