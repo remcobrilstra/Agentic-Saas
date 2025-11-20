@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input, Modal, UserForm, UserFormData } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, Modal, UserForm, UserFormData, Spinner, Badge } from '@/components';
 import { useAuth } from '@/contexts';
 import { usePermission } from '@/hooks';
 import { UserManagementService } from '@/modules/user-management';
@@ -110,8 +110,8 @@ export default function UsersManagement() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <Spinner size="lg" className="mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -258,8 +258,8 @@ export default function UsersManagement() {
             
             {isLoadingUsers ? (
               <div className="py-12 text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
-                <p className="text-gray-600">Loading users...</p>
+                <Spinner size="md" className="mb-2" />
+                <p className="text-muted-foreground">Loading users...</p>
               </div>
             ) : users.length === 0 ? (
               <div className="py-12 text-center text-gray-500">
@@ -287,13 +287,12 @@ export default function UsersManagement() {
                             : '-'}
                         </td>
                         <td className="py-4 px-4">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            user.role === 'admin' 
-                              ? 'bg-purple-100 text-purple-800' 
-                              : 'bg-blue-100 text-blue-800'
-                          }`}>
+                          <Badge
+                            variant={user.role === 'admin' ? 'secondary' : 'secondary'}
+                            className={user.role === 'admin' ? 'bg-purple-100 text-purple-800 hover:bg-purple-100' : 'bg-blue-100 text-blue-800 hover:bg-blue-100'}
+                          >
                             {user.role}
-                          </span>
+                          </Badge>
                         </td>
                         <td className="py-4 px-4 text-gray-600">
                           {formatDate(user.createdAt)}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Spinner, Badge } from '@/components';
 import { useAuth } from '@/contexts';
 import { usePermission } from '@/hooks';
 import { SubscriptionsService } from '@/modules/subscriptions';
@@ -50,8 +50,8 @@ export default function AdminSubscriptionsPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <Spinner size="lg" className="mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -130,8 +130,8 @@ export default function AdminSubscriptionsPage() {
           <CardContent>
             {isLoadingSubscriptions ? (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <p className="text-gray-600 mt-2">Loading subscriptions...</p>
+                <Spinner size="md" className="mb-2" />
+                <p className="text-muted-foreground mt-2">Loading subscriptions...</p>
               </div>
             ) : subscriptions.length === 0 ? (
               <div className="text-center py-12">
@@ -167,21 +167,19 @@ export default function AdminSubscriptionsPage() {
                           </div>
                         </td>
                         <td className="py-4 px-4">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
                             {subscription.user_count} {subscription.user_count === 1 ? 'user' : 'users'}
-                          </span>
+                          </Badge>
                         </td>
                         <td className="py-4 px-4 text-sm text-gray-600">
                           {new Date(subscription.start_date).toLocaleDateString()}
                         </td>
                         <td className="py-4 px-4">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            subscription.status === 'active' 
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-800'
-                          }`}>
+                          <Badge
+                            variant={subscription.status === 'active' ? 'success' : 'secondary'}
+                          >
                             {subscription.status}
-                          </span>
+                          </Badge>
                         </td>
                         <td className="py-4 px-4 font-medium text-gray-900">
                           ${subscription.subscription_type.price_monthly?.toFixed(2) || '0.00'}

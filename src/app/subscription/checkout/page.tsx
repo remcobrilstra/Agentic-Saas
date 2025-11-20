@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { UserLayout } from '@/layouts';
-import { Card, CardHeader, CardTitle, CardContent, Button } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Spinner } from '@/components';
 import { useAuth } from '@/contexts';
 import { SubscriptionsService } from '@/modules/subscriptions';
 
@@ -48,8 +48,8 @@ function CheckoutContent() {
   if (isAuthLoading) {
     return (
       <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-        <p className="text-gray-600">Loading...</p>
+        <Spinner size="lg" className="mb-4" />
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -62,27 +62,27 @@ function CheckoutContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="text-3xl font-bold text-foreground">Checkout</h1>
+        <p className="text-muted-foreground mt-2">
           Complete your subscription to {planName || 'the selected plan'}.
         </p>
       </div>
 
       {/* Payment Processing Placeholder */}
-      <Card className="border-2 border-blue-500">
+      <Card className="border-2 border-primary">
         <CardHeader>
           <CardTitle>Payment Processing - Coming Soon</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
               <div className="flex items-start">
-                <svg className="w-6 h-6 text-blue-600 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-6 h-6 text-primary mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <h4 className="text-sm font-semibold text-blue-900">Payment Integration Placeholder</h4>
-                  <p className="text-sm text-blue-700 mt-1">
+                  <h4 className="text-sm font-semibold text-foreground">Payment Integration Placeholder</h4>
+                  <p className="text-sm text-muted-foreground mt-1">
                     This is a placeholder for the payment processing flow. In production, this would integrate with Stripe or another payment provider.
                   </p>
                 </div>
@@ -90,51 +90,51 @@ function CheckoutContent() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+              <h3 className="text-lg font-semibold text-foreground mb-4">Order Summary</h3>
+              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Plan:</span>
-                  <span className="font-medium text-gray-900">{planName || 'Selected Plan'}</span>
+                  <span className="text-muted-foreground">Plan:</span>
+                  <span className="font-medium text-foreground">{planName || 'Selected Plan'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Billing:</span>
-                  <span className="font-medium text-gray-900">Monthly</span>
+                  <span className="text-muted-foreground">Billing:</span>
+                  <span className="font-medium text-foreground">Monthly</span>
                 </div>
-                <div className="border-t border-gray-300 pt-2 mt-2">
+                <div className="border-t border-border pt-2 mt-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-900 font-semibold">Total:</span>
-                    <span className="text-gray-900 font-semibold">To be calculated</span>
+                    <span className="text-foreground font-semibold">Total:</span>
+                    <span className="text-foreground font-semibold">To be calculated</span>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="pt-4">
-              <h4 className="text-sm font-semibold text-gray-900 mb-3">What happens next:</h4>
+              <h4 className="text-sm font-semibold text-foreground mb-3">What happens next:</h4>
               <ul className="space-y-2">
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">Your subscription will be activated immediately</span>
+                  <span className="text-sm text-muted-foreground">Your subscription will be activated immediately</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">You&apos;ll get access to all plan features</span>
+                  <span className="text-sm text-muted-foreground">You&apos;ll get access to all plan features</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">Billing will be processed automatically (when integrated)</span>
+                  <span className="text-sm text-muted-foreground">Billing will be processed automatically (when integrated)</span>
                 </li>
                 <li className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm text-gray-600">You can cancel anytime from your subscription page</span>
+                  <span className="text-sm text-muted-foreground">You can cancel anytime from your subscription page</span>
                 </li>
               </ul>
             </div>
@@ -157,7 +157,7 @@ function CheckoutContent() {
               </Button>
             </div>
 
-            <p className="text-xs text-gray-500 text-center mt-4">
+            <p className="text-xs text-muted-foreground text-center mt-4">
               * In production, this would redirect to Stripe Checkout or process payment through your chosen provider.
             </p>
           </div>
@@ -172,8 +172,8 @@ export default function CheckoutPage() {
     <UserLayout>
       <Suspense fallback={
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <Spinner size="lg" className="mb-4" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       }>
         <CheckoutContent />

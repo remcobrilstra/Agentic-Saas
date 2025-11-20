@@ -7,7 +7,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input } from '@/components';
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, Alert } from '@/components';
 import { getConfig } from '@/abstractions/config';
 import { MFAFactor } from '@/abstractions/auth';
 
@@ -122,20 +122,20 @@ export function MFASection() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             Add an extra layer of security to your account by enabling two-factor authentication.
           </p>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
+            <Alert variant="destructive">
+              {error}
+            </Alert>
           )}
 
           {success && (
-            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-600">{success}</p>
-            </div>
+            <Alert variant="success">
+              {success}
+            </Alert>
           )}
 
           {!isEnrolling && !hasVerifiedFactors && (
@@ -151,7 +151,7 @@ export function MFASection() {
           {isEnrolling && qrCode && (
             <div className="space-y-4">
               <div>
-                <p className="text-sm font-medium text-gray-900 mb-2">
+                <p className="text-sm font-medium text-foreground mb-2">
                   1. Scan this QR code with your authenticator app:
                 </p>
                 <div className="flex justify-center p-4 bg-white border rounded-lg">
@@ -162,17 +162,17 @@ export function MFASection() {
 
               {secret && (
                 <div>
-                  <p className="text-sm font-medium text-gray-900 mb-2">
+                  <p className="text-sm font-medium text-foreground mb-2">
                     Or enter this code manually:
                   </p>
-                  <code className="block p-3 bg-gray-100 rounded text-sm font-mono">
+                  <code className="block p-3 bg-muted rounded text-sm font-mono">
                     {secret}
                   </code>
                 </div>
               )}
 
               <div>
-                <p className="text-sm font-medium text-gray-900 mb-2">
+                <p className="text-sm font-medium text-foreground mb-2">
                   2. Enter the 6-digit code from your app:
                 </p>
                 <Input
@@ -212,7 +212,7 @@ export function MFASection() {
 
           {hasVerifiedFactors && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <svg
                     className="w-5 h-5 text-green-600"
@@ -228,7 +228,7 @@ export function MFASection() {
                     />
                   </svg>
                   <div>
-                    <p className="text-sm font-medium text-green-900">2FA is enabled</p>
+                    <p className="text-sm font-medium text-green-700">2FA is enabled</p>
                     <p className="text-xs text-green-700">Your account is protected</p>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ export function MFASection() {
                 </Button>
               </div>
 
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-muted-foreground">
                 <p>Recovery codes are not yet implemented. Please make sure you don&apos;t lose access to your authenticator app.</p>
               </div>
             </div>

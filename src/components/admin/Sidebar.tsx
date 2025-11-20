@@ -84,10 +84,10 @@ export function AdminSidebar({ extraSections = [] }: AdminSidebarProps) {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 bg-card border-r border-border min-h-[calc(100vh-4rem)]">
       <nav className="p-4 space-y-1">
         <div className="mb-4">
-          <h2 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          <h2 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             Admin Panel
           </h2>
         </div>
@@ -98,8 +98,8 @@ export function AdminSidebar({ extraSections = [] }: AdminSidebarProps) {
             href={item.href}
             className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
               isActive(item.href)
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-gray-700 hover:bg-gray-100'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-muted'
             }`}
           >
             <span className="mr-3">{item.icon}</span>

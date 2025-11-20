@@ -22,7 +22,7 @@ export function Card({ children, className = '', padding = 'md' }: CardProps) {
 
   return (
     <div
-      className={`bg-white rounded-lg shadow-md border border-gray-200 ${paddingClasses[padding]} ${className}`}
+      className={`bg-card text-card-foreground rounded-lg shadow-sm border border-border ${paddingClasses[padding]} ${className}`}
     >
       {children}
     </div>
@@ -44,7 +44,7 @@ export interface CardTitleProps {
 }
 
 export function CardTitle({ children, className = '' }: CardTitleProps) {
-  return <h3 className={`text-xl font-semibold text-gray-900 ${className}`}>{children}</h3>;
+  return <h3 className={`text-xl font-semibold leading-none tracking-tight ${className}`}>{children}</h3>;
 }
 
 export interface CardContentProps {
